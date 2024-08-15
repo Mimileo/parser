@@ -29,8 +29,9 @@ interface YearData {
 }
 
 interface ApiResponse {
-  [year: string]: YearData[];
+  [year: string]: MonthData[]; // Adjusting to reflect the actual response structure
 }
+
 
 
 interface TooltipProps {
@@ -44,49 +45,60 @@ const App: React.FC = () => {
   const [maxSales, setMaxSales] = useState<number>(Number.NEGATIVE_INFINITY);
 
   useEffect(() => {
-    axios.get<ApiResponse>('https://django-dev.aakscience.com/candidate_test/fronted')
+    axios.get('https://django-dev.aakscience.com/candidate_test/fronted')
       .then(response => {
-            const res: ApiResponse = response.data;
-
+        console.log('API Response:', response.data); // Log the response structure
+  
+        const res: any[] = response.data; 
         const datesValuePairs: SalesData[] = [];
         let totalSales = 0;
         let salesCount = 0;
         let currMinSales = Number.POSITIVE_INFINITY;
         let currMaxSales = Number.NEGATIVE_INFINITY;
-
-        Object.entries(res).forEach(([year, monthsArray]) => {
-          monthsArray.forEach(months => {
-            Object.entries(months).forEach(([month, daysArray]) => {
-              daysArray.forEach(days => {
-                Object.entries(days).forEach(([date, salesValue]) => {
-                  if (typeof salesValue === 'number') {
-                    const [dt1, dt2] = date.split(' , ');
-                    const formattedDate = moment(dt1, 'YYYY/MM/DD').format('MMM D, YYYY');
-                    const formattedTime = moment(dt2, 'HH:mm:ss').format('h:mm:ss A');
   
-                    datesValuePairs.push({
-                      dateTime: `${formattedDate} ${formattedTime}`,
-                      date: formattedDate,
-                      time: formattedTime,
-                      sales: salesValue
+        res.forEach(yearObj => {
+          Object.entries(yearObj).forEach(([year, monthsArray]) => {
+            if (Array.isArray(monthsArray)) {
+              monthsArray.forEach(monthObj => {
+                Object.entries(monthObj).forEach(([month, daysArray]) => {
+                  if (Array.isArray(daysArray)) {
+                    daysArray.forEach(dayObj => {
+                      Object.entries(dayObj).forEach(([dateTime, salesValue]) => {
+                        if (typeof salesValue === 'number') {
+                          const [dateStr, timeStr] = dateTime.split(' , ');
+                          const formattedDate = moment(dateStr, 'YYYY/MM/DD').format('MMM D, YYYY');
+                          const formattedTime = moment(timeStr, 'HH:mm:ss').format('h:mm:ss A');
+  
+                          datesValuePairs.push({
+                            dateTime: `${formattedDate} ${formattedTime}`,
+                            date: formattedDate,
+                            time: formattedTime,
+                            sales: salesValue
+                          });
+  
+                          totalSales += salesValue;
+                          salesCount++;
+  
+                          if (salesValue < currMinSales) {
+                            currMinSales = salesValue;
+                          }
+  
+                          if (salesValue > currMaxSales) {
+                            currMaxSales = salesValue;
+                          }
+                        } else {
+                          console.error(`Unexpected sales value type: ${typeof salesValue}`);
+                        }
+                      });
                     });
-  
-                    totalSales += salesValue;
-                    salesCount++;
-  
-                    if (salesValue < currMinSales) {
-                      currMinSales = salesValue;
-                    }
-  
-                    if (salesValue > currMaxSales) {
-                      currMaxSales = salesValue;
-                    }
                   } else {
-                    console.error(`Unexpected sales value type: ${typeof salesValue}`);
+                    console.error(`Expected daysArray to be an array but got: ${daysArray}`);
                   }
                 });
               });
-            });
+            } else {
+              console.error(`Expected monthsArray to be an array but got: ${monthsArray}`);
+            }
           });
         });
   
@@ -97,8 +109,9 @@ const App: React.FC = () => {
       }).catch((error) => {
         console.error("Error retrieving data", error);
       });
-    }, []);
-
+  }, []);
+  
+  
 
   const CustomToolTip: React.FC<TooltipProps> = (o) => {
     if (o.payload && o.payload.length) {
