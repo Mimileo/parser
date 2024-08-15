@@ -29,7 +29,7 @@ interface YearData {
 }
 
 interface ApiResponse {
-  [year: string]: MonthData[]; // Adjusting to reflect the actual response structure
+  [year: string]: MonthData[]; 
 }
 
 
@@ -38,7 +38,7 @@ interface TooltipProps {
   payload?: { payload: SalesData }[];
 }
 
-const App: React.FC = () => {
+const App = () => {
   const [data, setData] = useState<SalesData[]>([]);
   const [averageSales, setAverageSales] = useState<number>(0);
   const [minSales, setMinSales] = useState<number>(Number.POSITIVE_INFINITY); 
@@ -47,7 +47,7 @@ const App: React.FC = () => {
   useEffect(() => {
     axios.get('https://django-dev.aakscience.com/candidate_test/fronted')
       .then(response => {
-        console.log('API Response:', response.data); // Log the response structure
+        console.log('API Response:', response.data); 
   
         const res: any[] = response.data; 
         const datesValuePairs: SalesData[] = [];
