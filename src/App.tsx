@@ -5,7 +5,7 @@ import moment from 'moment'; // Import moment.js for date-time formatting
 import { LuArrowDownRight, LuArrowUp10, LuArrowUpRight, LuUserCircle } from "react-icons/lu";
 import { TiGroup } from 'react-icons/ti';
 import { BiEdit } from 'react-icons/bi';
-import './index.css';
+import "./index.css"
 
 
 
@@ -44,9 +44,9 @@ const App: React.FC = () => {
   const [maxSales, setMaxSales] = useState<number>(Number.NEGATIVE_INFINITY);
 
   useEffect(() => {
-    axios.get('https://django-dev.aakscience.com/candidate_test/fronted')
+    axios.get<ApiResponse>('https://django-dev.aakscience.com/candidate_test/fronted')
       .then(response => {
-        const res: ApiResponse = response.data;
+            const res: ApiResponse = response.data;
 
         const datesValuePairs: SalesData[] = [];
         let totalSales = 0;
@@ -59,26 +59,25 @@ const App: React.FC = () => {
             Object.entries(months).forEach(([month, daysArray]) => {
               daysArray.forEach(days => {
                 Object.entries(days).forEach(([date, salesValue]) => {
-                  if (typeof salesValue === 'number') { // Ensure salesValue is a number
+                  if (typeof salesValue === 'number') {
                     const [dt1, dt2] = date.split(' , ');
-    
-                    const formattedDate = moment(dt1, 'YYYY/MM/DD').format('MMM D, YYYY'); 
-                    const formattedTime = moment(dt2, 'HH:mm:ss').format('h:mm:ss A'); 
-    
+                    const formattedDate = moment(dt1, 'YYYY/MM/DD').format('MMM D, YYYY');
+                    const formattedTime = moment(dt2, 'HH:mm:ss').format('h:mm:ss A');
+  
                     datesValuePairs.push({
                       dateTime: `${formattedDate} ${formattedTime}`,
                       date: formattedDate,
                       time: formattedTime,
                       sales: salesValue
                     });
-    
+  
                     totalSales += salesValue;
                     salesCount++;
-    
+  
                     if (salesValue < currMinSales) {
                       currMinSales = salesValue;
                     }
-    
+  
                     if (salesValue > currMaxSales) {
                       currMaxSales = salesValue;
                     }
@@ -90,17 +89,16 @@ const App: React.FC = () => {
             });
           });
         });
-    
+  
         setData(datesValuePairs);
         setAverageSales(totalSales / salesCount);
         setMinSales(currMinSales);
         setMaxSales(currMaxSales);
-
-      })
-      .catch(error => {
+      }).catch((error) => {
         console.error("Error retrieving data", error);
       });
-  }, []);
+    }, []);
+
 
   const CustomToolTip: React.FC<TooltipProps> = (o) => {
     if (o.payload && o.payload.length) {
