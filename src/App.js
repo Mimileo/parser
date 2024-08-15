@@ -101,21 +101,21 @@ function App() {
   };
 
   return (
-    <main class="p-6 sm:p-10 space-y-6">
-    <div class="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between">
+    <main class="px-0 sm:px-0 space-y-6">
+    <div class="flex flex-col space-y-6 md:space-y-0 md:flex-row justify-between bg-gray-100 p-4">
       <div class="mr-6">
-      <h2 className="text-2xl font-bold mb-5">Bar Chart</h2>
+      <h1 className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-teal-500 text-5xl font-black5">Parser</h1>
       </div>
 
-      <div class="flex flex-wrap items-start justify-end -mb-3">
-          <button class="inline-flex px-5 py-3 text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:bg-purple-100 focus:bg-purple-100 border border-purple-600 rounded-md mb-3">
-            <BiEdit fontSize={"1.5em"}/> &nbsp;&nbsp;&nbsp;
-            Manage 
-          </button>
-          <button class="inline-flex px-8 py-3 text-white bg-purple-600 hover:bg-purple-700 focus:bg-purple-700 rounded-md ml-6 mb-3">
-            <LuUserCircle fontSize={"1.5em"}/> &nbsp;&nbsp;&nbsp;
-            Admin 
-          </button>
+        <div class="flex flex-wrap items-start justify-end -mb-3">
+            <button class="inline-flex px-5 py-3 text-purple-600 hover:text-purple-700 focus:text-purple-700 hover:bg-purple-100 focus:bg-purple-100 border border-purple-600 rounded-md mb-3">
+              <BiEdit fontSize={"1.5em"}/> &nbsp;&nbsp;&nbsp;
+              Manage 
+            </button>
+            <button class="inline-flex px-8 py-3 text-white bg-purple-600 hover:bg-purple-700 focus:bg-purple-700 rounded-md ml-6 mb-3">
+              <LuUserCircle fontSize={"1.5em"}/> &nbsp;&nbsp;&nbsp;
+              Admin 
+            </button>
         </div>
       </div>
       <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
